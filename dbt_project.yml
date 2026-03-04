@@ -2,7 +2,7 @@ name: 'jaffle_shop_external'
 version: '1.0.0'
 config-version: 2
 
-profile: default
+profile: 'default'
 
 seed-paths: ["seeds"]
 model-paths: ["models"]
@@ -11,15 +11,29 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+
+on-run-end:
+  - "{% if target.type == 'postgres' %}grant usage on schema {{ target.schema }} to lecteur;{% endif %}"
+
+
 seeds:
   # Builds seeds into '<your_schema_name>_raw'
   jaffle_shop_external:
+    +persist_docs:
+      relation: true
+      columns: true
     autre:
       +schema: seeds_autre
       +tags: 'autre'
     raw:
       +schema: seeds_raw
       +tags: 'raw'
+      # Ces seeds ne doivent être actifs que pour charger les tables definitives
+      # Le post_hook de ces seeds créée les tables definitives
+      # La compilation plante a cause de la gestion de la transaction
+      # https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
+      # dbt seed --select raw --full-refresh --vars '{"load_source_data": "True"}'  [--profile pg]
+      # +enabled: "{{ var('load_source_data', 'False') | as_bool }}"
 
 models:
   jaffle_shop_external:
@@ -29,3 +43,10 @@ models:
       +materialized: view
     marts:
       +materialized: table
+
+# Configuration for dbt Cloud
+dbt-cloud:
+  project-id: 70471823535774
+
+flags:
+  require_unique_project_resource_names: true
