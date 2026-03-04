@@ -43,9 +43,5 @@ models:
     marts:
       +materialized: table
 
-# Configuration for dbt Cloud
-dbt-cloud:
-  project-id: 70471823535774
-
 flags:
   require_unique_project_resource_names: true
