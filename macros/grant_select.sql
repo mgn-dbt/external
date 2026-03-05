@@ -8,5 +8,7 @@
   {{ log('Granting select on all tables in schema ' ~ schema ~ ' to role ' ~ role, info=True) }}
   {% do run_query(sql) %}
   {{ log('Privileges granted', info=True) }}
+{% else %}
+  {{ log('NOT IMPLEMENTED', info=True) }}
 {% endif %}
 {% endmacro %}
