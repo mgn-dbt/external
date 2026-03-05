@@ -4,14 +4,14 @@ seeds:
     config:
       post_hook:
         - "{%- set rel = adapter.get_relation(
-            database=target.database, 
-            schema='dbt_raw_jaffle_shop', 
+            database=target.database,
+            schema='dbt_raw_jaffle_shop',
             identifier='customers') -%}
-          {% do drop_relation_if_exists(relation=rel) %}" 
-        - "CREATE  TABLE {{ target.database }}.dbt_raw_jaffle_shop.customers AS 
+          {% do drop_relation_if_exists(relation=rel) %}"
+        - "CREATE  TABLE {{ target.database }}.dbt_raw_jaffle_shop.customers AS
           select 
-            {{ dbt.cast('id', dbt.type_int()) }} as id, 
-            first_name, 
+            {{ dbt.cast('id', dbt.type_int()) }} as id,
+            first_name,
             last_name
           from {{ this }}"
     columns:
@@ -27,22 +27,23 @@ seeds:
     config:
       post_hook:
         - "{%- set rel = adapter.get_relation(
-            database=target.database, 
-            schema='dbt_raw_jaffle_shop', 
+            database=target.database,
+            schema='dbt_raw_jaffle_shop',
             identifier='orders') -%}
           {% do drop_relation_if_exists(relation=rel) %}"
-        - "CREATE  TABLE {{ target.database }}.dbt_raw_jaffle_shop.orders AS 
-          select 
+        - "CREATE  TABLE {{ target.database }}.dbt_raw_jaffle_shop.orders AS
+          select
             {{ dbt.cast('id', dbt.type_int()) }} as id,
             {{ dbt.cast('user_id', dbt.type_int()) }} as user_id,
             {{ dbt.cast('order_date', 'date') }} as order_date,
             status,
             {{ dbt.dateadd(
-              datepart='hour', 
-              interval=-16, 
+              datepart='hour',
+              interval=-16,
               from_date_or_timestamp=dbt.current_timestamp())
             }} as _etl_loaded_at
           from {{ this }}"
+        - "{% do grant_select(schema='dbt_raw_jaffle_shop', role='lecteur') %}"
 
     columns:
       - name: id
@@ -63,8 +64,8 @@ seeds:
             schema='dbt_raw_stripe', 
             identifier='payment') -%}
           {% do drop_relation_if_exists(relation=rel) %}"
-        - "CREATE  TABLE {{ target.database }}.dbt_raw_stripe.payment AS 
-          select 
+        - "CREATE  TABLE {{ target.database }}.dbt_raw_stripe.payment AS
+          select
             {{ dbt.cast('id', dbt.type_int()) }} as id,
             {{ dbt.cast('orderid', dbt.type_int()) }} as orderid,
             paymentmethod,
@@ -72,11 +73,12 @@ seeds:
             {{ dbt.cast('amount', dbt.type_int()) }} as amount,
             {{ dbt.cast('created', 'date') }} as created,
             {{ dbt.dateadd(
-              datepart='hour', 
-              interval=-4, 
+              datepart='hour',
+              interval=-4,
               from_date_or_timestamp=dbt.current_timestamp())
             }} as _batched_at
           from {{ this }}"
+        - "{% do grant_select(schema='dbt_raw_stripe', role='lecteur') %}"
 
     columns:
       - name: id
@@ -91,3 +93,4 @@ seeds:
         description: payment amount
       - name: created
         description: payment created date
+

@@ -12,31 +12,29 @@ clean-targets:
   - "dbt_packages"
 
 
-on-run-end:
-  - "{% if target.type == 'postgres' %}grant usage on schema {{ target.schema }} to lecteur;{% endif %}"
-  - "{% if target.type == 'postgres' and env_var('DBT_ENV_NAME', 'sans') == 'dev' %}grant usage on schema seeds_autre to lecteur;{% endif %}"
-  - "{% if target.type == 'postgres' and env_var('DBT_ENV_NAME', 'sans') == 'dev' %}grant usage on schema seeds_raw to lecteur;{% endif %}"
-
-
 seeds:
   jaffle_shop_external:
     +persist_docs:
       relation: true
       columns: true
     autre:
-      +schema: seeds_autre
+      +schema: dbt_raw_autre
       +tags: 'autre'
+      # Le post_hook de ces seeds défini les grants sur le schema
     raw:
       +schema: seeds_raw
       +tags: 'raw'
-      # Ces seeds ne doivent être actifs que pour charger les tables definitives
-      # Le post_hook de ces seeds créée les tables definitives
-      # La compilation plante a cause de la gestion de la transaction
+      # Les 2 post_hook de ces seeds crééent les tables definitives dans dbt_raw_jaffle_shop et dbt_raw_stripe
+      # et définissent les grants sur les 2 schemas
+      
+      # Ne pas créer de dépendenace entre ces seeds et le reste du projet
+      # sinon la compilation risque de planter a cause de la gestion de la transaction si on desactive ces seeds
       # https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
-      # dbt seed --select raw --full-refresh --vars '{"load_source_data": "True"}'  [--profile pg]
-      # +enabled: "{{ var('load_source_data', 'False') | as_bool }}"
-
-
+      # Ces seeds ne sont la que pour préparer les sources du projet (d'ou un projet à part)
+      # dbt seed --select raw --full-refresh [--profile pg]
+      
+      # +enabled: "{{ var('load_source_data', 'False') | as_bool }}" pas valide du point de vue jsonschema
+      # --vars '{"load_source_data": "True"}'
 
 flags:
   require_unique_project_resource_names: true
