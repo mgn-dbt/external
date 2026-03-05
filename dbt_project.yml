@@ -14,10 +14,11 @@ clean-targets:
 
 on-run-end:
   - "{% if target.type == 'postgres' %}grant usage on schema {{ target.schema }} to lecteur;{% endif %}"
+  - "{% if target.type == 'postgres' and env_var('DBT_ENV_NAME', 'sans') == 'dev' %}grant usage on schema seeds_autre to lecteur;{% endif %}"
+  - "{% if target.type == 'postgres' and env_var('DBT_ENV_NAME', 'sans') == 'dev' %}grant usage on schema seeds_raw to lecteur;{% endif %}"
 
 
 seeds:
-  # Builds seeds into '<your_schema_name>_raw'
   jaffle_shop_external:
     +persist_docs:
       relation: true
@@ -35,13 +36,7 @@ seeds:
       # dbt seed --select raw --full-refresh --vars '{"load_source_data": "True"}'  [--profile pg]
       # +enabled: "{{ var('load_source_data', 'False') | as_bool }}"
 
-models:
-  jaffle_shop_external:
-    # Materialize staging models as views, and marts as tables
-    staging:
-      +materialized: view
-    marts:
-      +materialized: table
+
 
 flags:
   require_unique_project_resource_names: true
