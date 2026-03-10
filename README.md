@@ -1,5 +1,5 @@
 # 🥪 The Jaffle Shop 🦘
 
-seeds pour initier les tables sources du tutoriel Jaffle Shop
+Seeds to initialize the source tables for the Jaffle Shop tutorial
 
-Ce projet est une tentative de charger les données Jaffle sur Postgresql et BigQuery.
+This project is an attempt to load Jaffle data into PostgreSQL and BigQuery.
