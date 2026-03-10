@@ -19,6 +19,7 @@ NOREPLICATION
 NOBYPASSRLS
 ENCRYPTED PASSWORD xxxxxxxxxxxxxxxxxxxxx;
 ```
+
 ### base :
 ```sql
 CREATE DATABASE jaffle_shop
@@ -29,7 +30,8 @@ LOCALE_PROVIDER = 'libc'
 CONNECTION LIMIT = -1
 IS_TEMPLATE = False;
 ```
-# schemas :
+
+### schemas :
 ```sql
 CREATE SCHEMA IF NOT EXISTS seeds_raw  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA seeds_raw TO jaffle;
