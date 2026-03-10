@@ -8,7 +8,7 @@
 
     {%- else -%}
 
-        {#  traitement spécial des seeds de dev  #}
+        {#  special treatment of development seeds  #}
         {% if node.resource_type == 'seed' and env_var('DBT_ENV_NAME', 'sans') == 'dev' %}
             
             {{ custom_schema_name | trim }}
