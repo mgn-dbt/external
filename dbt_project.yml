@@ -20,43 +20,19 @@ seeds:
     autre:
       +schema: dbt_raw_autre
       +tags: 'autre'
-      # Le post_hook de ces seeds défini les grants lecteur sur le schema
+      # The post_hook of these seeds defines the reader grants on the schema
     raw:
       +schema: seeds_raw
       +tags: 'raw'
-      # Les post_hook de ces seeds crééent les tables definitives dans dbt_raw_jaffle_shop et dbt_raw_stripe
-      # et définissent les grants lecteur sur les 2 schemas
+      # The post-hooks of these seeds create the final tables in dbt_raw_jaffle_shop and dbt_raw_stripe
+      # and define the reader grants on both schemas
       
-      # Ne pas créer de dépendance entre ces seeds et des models
-      # sinon la compilation risque de planter a cause de la gestion de la transaction si on desactive ces seeds
+      # Do not create dependencies between these seeds and models anywhere else
+      # Otherwise, compilation may crash due to transaction handling if these seeds are disabled
       # https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
-      # Ces seeds ne sont la que pour préparer les sources du tutoriel jaffle (d'ou un projet à part)
-      # dbt seed --select raw --full-refresh [--profile pg]
+      # These seeds are only used to prepare the source code for the Jaffle tutorial (hence the separate project)
+      # dbt seed --full-refresh [--profile pg|--profile default] [--select raw|autre]
 
 flags:
   require_unique_project_resource_names: true
-
-
-# scripts postgresql :
-# le role :
-# CREATE ROLE jaffle WITH
-# LOGIN
-# NOSUPERUSER
-# INHERIT
-# NOCREATEDB
-# NOCREATEROLE
-# NOREPLICATION
-# NOBYPASSRLS
-# ENCRYPTED PASSWORD xxxxxxxxxxxxxxxxxxxxx;
-# la base : 
-# CREATE DATABASE jaffle_shop
-# WITH
-# OWNER = jaffle
-# ENCODING = 'UTF8'
-# LOCALE_PROVIDER = 'libc'
-# CONNECTION LIMIT = -1
-# IS_TEMPLATE = False;
-# les schemas :
-# CREATE SCHEMA IF NOT EXISTS seeds_raw  AUTHORIZATION jaffle;
-# GRANT ALL ON SCHEMA seeds_raw TO jaffle;
 
