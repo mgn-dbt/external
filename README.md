@@ -49,6 +49,6 @@ CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
 ```
 
-### pb certificat pgadmin 4
+### solve pgadmin 4 certificate error
 & "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
 
