@@ -35,4 +35,20 @@ IS_TEMPLATE = False;
 ```sql
 CREATE SCHEMA IF NOT EXISTS seeds_raw  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA seeds_raw TO jaffle;
+
+CREATE SCHEMA IF NOT EXISTS dbt_raw_stripe  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_raw_stripe TO jaffle;
+
+CREATE SCHEMA IF NOT EXISTS dbt_raw_jaffle_shop  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_raw_jaffle_shop TO jaffle;
+
+CREATE SCHEMA IF NOT EXISTS dbt_raw_autre  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_raw_autre TO jaffle;
+
+CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
 ```
+
+### pb certificat pgadmin 4
+& "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
+
