@@ -33,6 +33,7 @@ seeds:
       # These seeds are only used to prepare the source tables for the Jaffle tutorial (hence the separate project)
       # dbt seed --full-refresh --profile pg       (for PostgreSql)
       # dbt seed --full-refresh --profile default  (for BigQuery)
+      # dbt seed --full-refresh --profile duckdb_tuto (for Duckdb)
 
 flags:
   require_unique_project_resource_names: true
