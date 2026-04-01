@@ -3,11 +3,14 @@ seeds:
     description: raw customers
     config:
       post_hook:
+        - "{%- set schema_relation = api.Relation.create(
+            database=target.database,
+            schema='dbt_raw_jaffle_shop') -%}
+          {% do create_schema(relation=schema_relation) %}"
         - "{%- set rel = adapter.get_relation(
             database=target.database,
             schema='dbt_raw_jaffle_shop',
             identifier='customers') -%}
-          {% do create_schema(relation=rel) %}
           {% do drop_relation_if_exists(relation=rel) %}"
         - "CREATE  TABLE {{ target.database }}.dbt_raw_jaffle_shop.customers AS
           select 
@@ -60,11 +63,14 @@ seeds:
     description: raw payments
     config:
       post_hook:
+        - "{%- set schema_relation = api.Relation.create(
+            database=target.database,
+            schema='dbt_raw_stripe') -%}
+          {% do create_schema(relation=schema_relation) %}"
         - "{%- set rel = adapter.get_relation(
             database=target.database, 
             schema='dbt_raw_stripe', 
             identifier='payment') -%}
-          {% do create_schema(relation=rel) %}
           {% do drop_relation_if_exists(relation=rel) %}"
         - "CREATE  TABLE {{ target.database }}.dbt_raw_stripe.payment AS
           select
