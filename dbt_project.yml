@@ -20,20 +20,17 @@ seeds:
     autre:
       +schema: dbt_raw_autre
       +tags: 'autre'
-      # The post_hook of these seeds defines the reader grants on the schema
+
     raw:
       +schema: seeds_raw
       +tags: 'learn'
       # The post-hooks of these seeds create the final tables in dbt_raw_jaffle_shop and dbt_raw_stripe
-      # and define the reader grants on both schemas
-      
-      # Do not create dependencies between these seeds and models anywhere else
-      # Otherwise, compilation may crash due to transaction handling if these seeds are disabled
-      # https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
-      # These seeds are only used to prepare the source tables for the Jaffle tutorial (hence the separate project)
-      # dbt seed --full-refresh --profile pg          (for PostgreSql)
-      # dbt seed --full-refresh --profile default     (for BigQuery)
-      # dbt seed --full-refresh --profile duck_tuto   (for Duckdb)
+
+# grants for postgreSQL
+on-run-end:
+  - "{% do grant_select(schema='dbt_raw_autre', role='lecteur') %}
+     {% do grant_select(schema='dbt_raw_jaffle_shop', role='lecteur') %}
+     {% do grant_select(schema='dbt_raw_stripe', role='lecteur') %}"
 
 flags:
   require_unique_project_resource_names: true

@@ -75,6 +75,3 @@ seeds:
         description: whether the supply is perishable
       - name: sku
         description: supply sku
-    config:
-      post_hook:
-        - "{% do grant_select(schema='dbt_raw_autre', role='lecteur') %}"
