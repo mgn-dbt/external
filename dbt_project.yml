@@ -2,7 +2,7 @@ name: 'jaffle_shop_external'
 version: '1.0.0'
 config-version: 2
 
-profile: 'default'
+profile: default
 
 seed-paths: ["seeds"]
 model-paths: ["models"]
@@ -31,9 +31,9 @@ seeds:
       # Otherwise, compilation may crash due to transaction handling if these seeds are disabled
       # https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
       # These seeds are only used to prepare the source tables for the Jaffle tutorial (hence the separate project)
-      # dbt seed --full-refresh --profile pg       (for PostgreSql)
-      # dbt seed --full-refresh --profile default  (for BigQuery)
-      # dbt seed --full-refresh --profile duckdb_tuto (for Duckdb)
+      # dbt seed --full-refresh --profile pg          (for PostgreSql)
+      # dbt seed --full-refresh --profile default     (for BigQuery)
+      # dbt seed --full-refresh --profile duck_tuto   (for Duckdb)
 
 flags:
   require_unique_project_resource_names: true
