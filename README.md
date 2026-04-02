@@ -4,7 +4,7 @@ Seeds to initialize the source tables for the Jaffle Shop tutorial
 
 Do not create dependencies between this project or these seeds anywhere else<br>
 Otherwise, compilation may crash due to transaction handling<br>
-https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior<br>
+https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook#transaction-behavior
 
 These seeds are only used to prepare the source tables for the Jaffle tutorial (hence the separate project)<br>
 cf https://github.com/mgn-dbt/tutorial
@@ -68,7 +68,7 @@ duck_tuto:
 
 BigQuery profile must be named "default" for dbt cloud.
 
-offline directory is in .gitignore to keep duckdb files out of version
+offline directory is in .gitignore to keep duckdb files out of version<br>
 cf https://github.com/mgn-dbt/tutorial/blob/main/.gitignore
 
 # Command to execute
@@ -82,7 +82,7 @@ dbt seed --full-refresh --profile duck_tuto   (for Duckdb)
 
 SSL/TLS certificate generation and configuration is not documented here.<br>
 PostgreSQL connection must be established under SSL/TLS for security.<br>
-cf https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates<br>
+cf https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates
 
 Here is my PG security configuration :
 
@@ -155,8 +155,8 @@ GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
 
 # Duckdb
 
-I have given up trying to use sqltools duckdb plugin.
-I have used duckdb ui.
+I have given up using sqltools duckdb plugin.<br>
+I use duckdb ui instead.
 
 duckdb.exe -ui
 
