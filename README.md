@@ -2,8 +2,8 @@
 
 Seeds to initialize the source tables for the Jaffle Shop tutorials
 
-There are 2 batches of tables used in DBT tutorials.
-3 tables tuto : raw_customers, raw_orders and raw_payments
+There are 2 batches of tables used in DBT tutorials.<br>
+3 tables tuto : raw_customers, raw_orders and raw_payments<br>
 6 tables tuto : customers, items, orders, products, stores and supplies
 
 Do not create dependencies between this project or the seeds in it in your project.
