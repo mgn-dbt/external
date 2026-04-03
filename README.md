@@ -47,7 +47,7 @@ pg:
       type: postgres
       user: jaffle
       sslmode: verify-ca
-      sslrootcert: C:\Users\<user>\SCOOP\persist\ssl\CA\certs\ca.cert.pem
+      sslrootcert: C:\Users\<user>\SCOOP\persist\ssl\mkcert\rootCA.pem
 duck_tuto:
   target: dev
   outputs:
@@ -133,9 +133,16 @@ select * from pg_catalog.pg_authid where rolcanlogin = true;
 \q to exit psql
 
 
-PostgreSQL connection should be established under SSL/TLS for security.<br>
-SSL/TLS certificate generation and configuration is not documented here.<br>
-Cf https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates
+PostgreSQL connection should be established under SSL/TLS for security.
+
+Cf https://github.com/filosottile/mkcert
+
+```
+$env:CAROOT='C:\Users\<user>\SCOOP\persist\ssl\mkcert'
+mkcert -install
+mkcert -cert-file (Join-Path $(mkcert -CAROOT) "server.cert.pem") -key-file (Join-Path $(mkcert -CAROOT) "server.key.pem") localhost $(hostname).ToLower()
+```
+
 
 ### postgresql.conf and pg_hba.conf
 
@@ -150,9 +157,9 @@ listen_addresses = '*'
 password_encryption = scram-sha-256
 ssl=on
 ssl_min_protocol_version = 'TLSv1.2'
-ssl_ca_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\CA\\certs\\ca.cert.pem'
-ssl_cert_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\CA\\certs\\server.cert.pem'
-ssl_key_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\CA\\private\\server.key.pem'
+ssl_ca_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\rootCA.pem'
+ssl_cert_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\server.cert.pem'
+ssl_key_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\server.key.pem'
 ```
 
 Backup original pg_hba.conf.<br>
@@ -166,33 +173,15 @@ hostnossl   all             all             0.0.0.0/0               reject
 hostnossl   all             all             ::/0                    reject
 ```
 
-
-### postgresql.conf and pg_hba.conf without SSL/TLS (passwords travel in clear text. not secure)
-
-Add this in instance.conf in the same directory as postgresql.conf :
-```
-listen_addresses = '*'
-password_encryption = scram-sha-256
-```
-
-Backup original pg_hba.conf.<br>
-Overwrite pg_hba.conf with :
-
-```
-# TYPE      DATABASE        USER            ADDRESS                 METHOD
-host     all             all             0.0.0.0/0               scram-sha-256
-host     all             all             ::/0                    scram-sha-256
-```
-
-
-### pgadmin 4
-
 Restart instance
 ```
 pg_ctl.exe restart
 ```
 
-Solve certificate error
+
+### pgadmin 4
+
+Solve embeded python certificate error
 ```powershell
 & "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
 ```
@@ -229,7 +218,7 @@ I use SCOOP under Windows and Powershell with no admin rights.<br>
 
 Excerpt from "scoop list" :
 ```
-openssl-light    3.6.1        main
+mkcert           1.4.4        extras
 nodejs           25.9.0       main
 postgresql       18.3         main
 duckdb           1.5.1        main
