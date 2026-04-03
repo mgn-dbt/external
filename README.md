@@ -123,19 +123,19 @@ CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
 ```
 
-Before quiting, secure the postgres (DBA) account
+Before exiting psql, secure the postgres (DBA) account
 ```
 ALTER USER postgres PASSWORD 'xxxxxxxxxxxx';
 
 select * from pg_catalog.pg_authid where rolcanlogin = true;
 ```
 
-\q to quit psql
+\q to exit psql
 
 
-PostgreSQL connection must be established under SSL/TLS for security.<br>
+PostgreSQL connection should be established under SSL/TLS for security.<br>
 SSL/TLS certificate generation and configuration is not documented here.<br>
-cf https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates
+Cf https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates
 
 ### postgresql.conf and pg_hba.conf
 
@@ -160,9 +160,6 @@ Overwrite pg_hba.conf with :
 
 ```
 # TYPE      DATABASE        USER            ADDRESS                 METHOD
-# uncomment the 2 following lines to accept local users connections (need a database restart)
-#host    all             all             127.0.0.1/32            trust
-#host    all             all             ::1/128                 trust
 hostssl     all             all             0.0.0.0/0               scram-sha-256
 hostssl     all             all             ::/0                    scram-sha-256
 hostnossl   all             all             0.0.0.0/0               reject
@@ -183,9 +180,6 @@ Overwrite pg_hba.conf with :
 
 ```
 # TYPE      DATABASE        USER            ADDRESS                 METHOD
-# uncomment the 2 following lines to accept local users connections (need a database restart)
-#host    all             all             127.0.0.1/32            trust
-#host    all             all             ::1/128                 trust
 host     all             all             0.0.0.0/0               scram-sha-256
 host     all             all             ::/0                    scram-sha-256
 ```
@@ -193,14 +187,14 @@ host     all             all             ::/0                    scram-sha-256
 
 ### pgadmin 4
 
-solve certificate error
-```powershell
-& "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
-```
-
-Restart instance.
+Restart instance
 ```
 pg_ctl.exe restart
+```
+
+Solve certificate error
+```powershell
+& "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
 ```
 
 Test SSL/TLS connection with pgadmin 4
