@@ -64,17 +64,11 @@ BigQuery profile must be named "default" for dbt cloud.
 
 Duckdb log_query_path is optional. Use it only to debug queries.
 
-offline directory is in .gitignore file to keep duckdb files out of version.
+NB : offline directory is in .gitignore file to keep duckdb files out of version.
 
 
 # PostgreSQL
 
-## solve pgadmin 4 certificate error
-```powershell
-& "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
-```
-
-## Scripts PostgreSql :
 
 Start instance :
 ```
@@ -83,11 +77,14 @@ pg_ctl.exe start
 
 Connect as DBA :
 ```
+chcp 1252
 psql.exe -U postgres
 ```
 
-### role :
+### create role, database and schemas :
 ```sql
+set password_encryption = 'scram-sha-256';
+
 CREATE ROLE jaffle WITH
 LOGIN
 NOSUPERUSER
@@ -96,11 +93,18 @@ NOCREATEDB
 NOCREATEROLE
 NOREPLICATION
 NOBYPASSRLS
-ENCRYPTED PASSWORD xxxxxxxxxxxxxxxxxxxxx;
-```
+ENCRYPTED PASSWORD 'xxxxxxxxxxxx';
 
-### base :
-```sql
+CREATE ROLE lecteur WITH
+LOGIN
+NOSUPERUSER
+INHERIT
+NOCREATEDB
+NOCREATEROLE
+NOREPLICATION
+NOBYPASSRLS
+ENCRYPTED PASSWORD 'xxxxxxxxxxxx';
+
 CREATE DATABASE jaffle_shop
 WITH
 OWNER = jaffle
@@ -108,10 +112,7 @@ ENCODING = 'UTF8'
 LOCALE_PROVIDER = 'libc'
 CONNECTION LIMIT = -1
 IS_TEMPLATE = False;
-```
 
-### schemas :
-```sql
 CREATE SCHEMA IF NOT EXISTS seeds_raw  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA seeds_raw TO jaffle;
 
@@ -122,16 +123,15 @@ CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
 ```
 
+Before quiting, secure the postgres (DBA) account
+```
+ALTER USER postgres PASSWORD 'xxxxxxxxxxxx';
+
+select * from pg_catalog.pg_authid where rolcanlogin = true;
+```
+
 \q to quit psql
 
-
-## Security
-
-Secure the postgres (DBA) account
-```
-psql -U postgres -d postgres
-ALTER USER postgres PASSWORD 'xxxxxxxx';
-```
 
 PostgreSQL connection must be established under SSL/TLS for security.<br>
 SSL/TLS certificate generation and configuration is not documented here.<br>
@@ -155,7 +155,7 @@ ssl_cert_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\CA\\certs\\server.cert.
 ssl_key_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\CA\\private\\server.key.pem'
 ```
 
-Backup pg_hba.conf.<br>
+Backup original pg_hba.conf.<br>
 Overwrite pg_hba.conf with :
 
 ```
@@ -169,8 +169,42 @@ hostnossl   all             all             0.0.0.0/0               reject
 hostnossl   all             all             ::/0                    reject
 ```
 
-Restart instance.<br>
+
+### postgresql.conf and pg_hba.conf without SSL/TLS (passwords travel in clear text. not secure)
+
+Add this in instance.conf in the same directory as postgresql.conf :
+```
+listen_addresses = '*'
+password_encryption = scram-sha-256
+```
+
+Backup original pg_hba.conf.<br>
+Overwrite pg_hba.conf with :
+
+```
+# TYPE      DATABASE        USER            ADDRESS                 METHOD
+# uncomment the 2 following lines to accept local users connections (need a database restart)
+#host    all             all             127.0.0.1/32            trust
+#host    all             all             ::1/128                 trust
+host     all             all             0.0.0.0/0               scram-sha-256
+host     all             all             ::/0                    scram-sha-256
+```
+
+
+### pgadmin 4
+
+solve certificate error
+```powershell
+& "<path_to>\postgresql\18.3\pgAdmin 4\python\python.exe" -m pip install pip_system_certs
+```
+
+Restart instance.
+```
+pg_ctl.exe restart
+```
+
 Test SSL/TLS connection with pgadmin 4
+![pgadmin 4 params]pgadmin4params.png
 
 
 # Duckdb
