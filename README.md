@@ -204,7 +204,8 @@ pg_ctl.exe restart
 ```
 
 Test SSL/TLS connection with pgadmin 4
-![pgadmin 4 params]pgadmin4params.png
+
+![pgadmin 4 params](pgadmin4params.png)
 
 
 # Duckdb
