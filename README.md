@@ -56,13 +56,14 @@ duck_tuto:
       path: 'C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto.duckdb'
       threads: 4
       schema: dbt_<user>
-      settings:
-        log_query_path: 'C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto_query.log'
+      #settings:
+      #  log_query_path: 'C:\Users\marc.guedon\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto_query.log'
 ```
 
 BigQuery profile must be named "default" for dbt cloud.
 
-Duckdb log_query_path is optional. Use it only to debug queries.
+Duckdb log_query_path is optional. Use it only to debug queries.<br>
+Beware threads must be set to 1 if log_query_path is used.
 
 NB : offline directory is in .gitignore file to keep duckdb files out of version.
 
