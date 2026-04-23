@@ -54,8 +54,9 @@ duck_tuto:
     dev:
       type: duckdb
       path: 'C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto.duckdb'
-      threads: 4
       schema: dbt_<user>
+      threads: 4
+      # threads: 1  (for log_query_path to work)
       #settings:
       #  log_query_path: 'C:\Users\marc.guedon\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto_query.log'
 ```
@@ -194,8 +195,12 @@ Test SSL/TLS connection with pgadmin 4
 
 # Duckdb
 
-I have given up using sqltools duckdb plugin.<br>
-I use duckdb ui instead.
+Don't try using vscode with duckdb.<br>
+Duckdb is locked by the process connected to it.<br>
+Only one process can read the database so vscode dbt extension lock it with the LSP.<br>
+Use duckdb ui or duckdb interactive shell (https://github.com/duckdb/dbt-duckdb/tree/master#interactive-shell)
+
+## duckdb ui
 
 duckdb.exe -ui
 
@@ -211,6 +216,49 @@ detach duck_tuto;
 Don't forget to detach from database before exiting.
 
 .exit (to quit)
+
+## interactive shell
+
+In python sqlfluff venv :
+<path_to>\venvs\sqlfluff\Scripts\activate.ps1
+
+
+cd C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck
+git clone https://github.com/mgn-dbt/tutorial .
+git checkout develop_duck
+python -m dbt.adapters.duckdb.cli --profile duck_tuto
+
+```
+duckdbt (jaffle_shop_duck)> deps
+07:49:42  Running with dbt=1.10.20
+07:49:44  Installing dbt-labs/dbt_utils
+07:49:46  Installed from version 1.3.3
+07:49:46  Up to date!
+07:49:46  Installing dbt-labs/audit_helper
+07:49:47  Installed from version 0.13.0
+07:49:47  Up to date!
+07:49:47  Installing godatadriven/dbt_date
+07:49:47  Installed from version 0.17.2
+07:49:47  Up to date!
+07:49:47  Installing metaplane/dbt_expectations
+07:49:50  Installed from version 0.10.10
+07:49:50  Up to date!
+07:49:50  Installing https://github.com/tnightengale/dbt-meta-testing.git
+07:49:54  Installed from revision b05df7ae6158a63e0ec966550c4217e20067f2f7
+
+duckdbt (jaffle_shop_duck)> parse
+07:49:58  Running with dbt=1.10.20
+07:49:58  Registered adapter: duckdb=1.10.1
+07:49:59  Unable to do partial parsing because saved manifest not found. Starting full parse.
+07:50:02  Performance info: C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck\target\perf_info.json
+
+duckdbt (jaffle_shop_duck)> help
+
+Documented commands (type help <topic>):
+========================================
+EOF    compile  deps  help  parse  run   snapshot
+build  debug    exit  list  quit   seed  test
+```
 
 
 # SCOOP
