@@ -17,20 +17,21 @@ seeds:
     +persist_docs:
       relation: true
       columns: true
-    autre:
-      +schema: dbt_raw_autre
-      +tags: 'autre'
 
-    raw:
+    raw3:
       +schema: seeds_raw
       +tags: 'learn'
       # The post-hooks of these seeds create the final tables in dbt_raw_jaffle_shop and dbt_raw_stripe
 
+    raw6:
+      +schema: dbt_raw_extended
+      +tags: 'extended'
+
 # grants for postgreSQL
 on-run-end:
-  - "{% do grant_select(schema='dbt_raw_autre', role='lecteur') %}
-     {% do grant_select(schema='dbt_raw_jaffle_shop', role='lecteur') %}
-     {% do grant_select(schema='dbt_raw_stripe', role='lecteur') %}"
+  - "{% do grant_select(schema='dbt_raw_jaffle_shop', role='lecteur') %}
+     {% do grant_select(schema='dbt_raw_stripe', role='lecteur') %}
+     {% do grant_select(schema='dbt_raw_extended', role='lecteur') %}"
 
 flags:
   require_unique_project_resource_names: true

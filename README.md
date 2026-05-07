@@ -135,8 +135,8 @@ IS_TEMPLATE = False;
 CREATE SCHEMA IF NOT EXISTS seeds_raw  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA seeds_raw TO jaffle;
 
-CREATE SCHEMA IF NOT EXISTS dbt_raw_autre  AUTHORIZATION jaffle;
-GRANT ALL ON SCHEMA dbt_raw_autre TO jaffle;
+CREATE SCHEMA IF NOT EXISTS dbt_raw_extended  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_raw_extended TO jaffle;
 
 CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
