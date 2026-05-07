@@ -35,6 +35,8 @@ vscode           1.114.0      extras
 
 ## My DBT Profiles
 
+NB : In the following, replace <username> by your own $env:USERNAME
+
 ($env:USERPROFILE\.dbt\profiles.yml)
 
 ```yaml
@@ -45,9 +47,9 @@ default:
       type: bigquery
       threads: 4
       project: dbt-jaffle-shop-xxxxxx
-      dataset: dbt_<user>
+      dataset: dbt_<username>
       method: service-account
-      keyfile: C:\Users\<user>\.dbt\dbt-jaffle-shop-xxxxxx-yyyyyyyyyyyy.json
+      keyfile: C:\Users\<username>\.dbt\dbt-jaffle-shop-xxxxxx-yyyyyyyyyyyy.json
       location: US
 pg:
   target: dev
@@ -57,24 +59,24 @@ pg:
       host: localhost
       password: jaffle
       port: 5432
-      schema: dbt_<user>
-      search_path: dbt_<user>,public
+      schema: dbt_<username>
+      search_path: dbt_<username>,public
       threads: 1
       type: postgres
       user: jaffle
       sslmode: verify-ca
-      sslrootcert: C:\Users\<user>\SCOOP\persist\ssl\mkcert\rootCA.pem
+      sslrootcert: C:\Users\<username>\SCOOP\persist\ssl\mkcert\rootCA.pem
 duck_tuto:
   target: dev
   outputs:
     dev:
       type: duckdb
-      path: 'C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto.duckdb'
-      schema: dbt_<user>
+      path: 'C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto.duckdb'
+      schema: dbt_<username>
       threads: 4
       # threads: 1  (for log_query_path to work)
       #settings:
-      #  log_query_path: 'C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto_query.log'
+      #  log_query_path: 'C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop\offline\duck_tuto_query.log'
 ```
 
 BigQuery profile must be named "default" for dbt cloud.
@@ -138,8 +140,8 @@ GRANT ALL ON SCHEMA seeds_raw TO jaffle;
 CREATE SCHEMA IF NOT EXISTS dbt_raw_extended  AUTHORIZATION jaffle;
 GRANT ALL ON SCHEMA dbt_raw_extended TO jaffle;
 
-CREATE SCHEMA IF NOT EXISTS dbt_<user>  AUTHORIZATION jaffle;
-GRANT ALL ON SCHEMA dbt_<user> TO jaffle;
+CREATE SCHEMA IF NOT EXISTS dbt_<username>  AUTHORIZATION jaffle;
+GRANT ALL ON SCHEMA dbt_<username> TO jaffle;
 ```
 
 Before exiting psql, secure the postgres (DBA) account
@@ -157,7 +159,7 @@ PostgreSQL connection should be established under SSL/TLS for security.
 Cf [mkcert](https://github.com/filosottile/mkcert)
 
 ```cmd
-$env:CAROOT='C:\Users\<user>\SCOOP\persist\ssl\mkcert'
+$env:CAROOT='C:\Users\<username>\SCOOP\persist\ssl\mkcert'
 mkcert -install
 mkcert -cert-file (Join-Path $(mkcert -CAROOT) "server.cert.pem") -key-file (Join-Path $(mkcert -CAROOT) "server.key.pem") localhost $(hostname).ToLower()
 ```
@@ -177,9 +179,9 @@ listen_addresses = '*'
 password_encryption = scram-sha-256
 ssl=on
 ssl_min_protocol_version = 'TLSv1.2'
-ssl_ca_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\rootCA.pem'
-ssl_cert_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\server.cert.pem'
-ssl_key_file = 'C:\\Users\\<user>\\SCOOP\\persist\\ssl\\mkcert\\server.key.pem'
+ssl_ca_file = 'C:\\Users\\<username>\\SCOOP\\persist\\ssl\\mkcert\\rootCA.pem'
+ssl_cert_file = 'C:\\Users\\<username>\\SCOOP\\persist\\ssl\\mkcert\\server.cert.pem'
+ssl_key_file = 'C:\\Users\\<username>\\SCOOP\\persist\\ssl\\mkcert\\server.key.pem'
 ```
 
 Backup original pg_hba.conf.  
@@ -229,9 +231,9 @@ In python sqlfluff venv :
 
 ```powershell
 & <path_to>\venvs\sqlfluff\Scripts\activate.ps1
-md C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck
-md C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck\offline
-cd C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck
+md C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop_duck
+md C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop_duck\offline
+cd C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop_duck
 
 git clone https://github.com/mgn-dbt/tutorial .
 git checkout develop_duck
@@ -242,7 +244,7 @@ git checkout develop_duck
 duckdb.exe -ui
 
 ```sql
-attach 'c:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck\offline\duck_tuto.duckdb' as duck_tuto;
+attach 'c:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop_duck\offline\duck_tuto.duckdb' as duck_tuto;
 use duck_tuto;
 
 SELECT * FROM duckdb_settings();
@@ -282,7 +284,7 @@ duckdbt (jaffle_shop_duck)> parse
 07:49:58  Running with dbt=1.10.20
 07:49:58  Registered adapter: duckdb=1.10.1
 07:49:59  Unable to do partial parsing because saved manifest not found. Starting full parse.
-07:50:02  Performance info: C:\Users\<user>\SCOOP\_dev_\dbt\jaffle_shop_duck\target\perf_info.json
+07:50:02  Performance info: C:\Users\<username>\SCOOP\_dev_\dbt\jaffle_shop_duck\target\perf_info.json
 
 duckdbt (jaffle_shop_duck)> help
 
