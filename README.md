@@ -1,4 +1,4 @@
-# 🥪 The Jaffle Shop 🦘
+# The Jaffle Shop 🥪
 
 Seeds to initialize the source tables for the Jaffle Shop tutorials
 
